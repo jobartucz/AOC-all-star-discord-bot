@@ -1,0 +1,28 @@
+{
+  "name": "AOC-all-star-discord-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jobartucz/AOC-all-star-discord-bot.git"
+  },
+  "keywords": [],
+  "author": "Coder Gautam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jobartucz/AOC-all-star-discord-bot/issues"
+  },
+  "homepage": "https://github.com/jobartucz/AOC-all-star-discord-bot#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "discord.js": "^13.3.1"
+  },
+  "devDependencies": {
+    "node": "^16.13.1"
+  },
+  "description": ""
+}
