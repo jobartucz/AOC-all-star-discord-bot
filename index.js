@@ -41,7 +41,7 @@ client.once('ready', () => {
                 SEND_MESSAGES: true,
                 VIEW_CHANNEL: true
               });
-              channel.send(user.name+" has completed Day "+completed+"!\nThey have been added to this channel.")
+              channel.send(user.name+" has completed Day "+completed+"!")
               } else {
                 //already is in channel
               }
