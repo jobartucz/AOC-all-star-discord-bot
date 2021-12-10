@@ -14,7 +14,7 @@ client.once('ready', () => {
   function getCompletedStars(member) {
     return Object.keys(Object.filter(member.completion_day_level, ([key, value]) => value.hasOwnProperty("1") && value.hasOwnProperty("2")))
   }
-  //setInterval(() => {
+  setInterval(() => {
   get("https://saturn.rochesterschools.org/python/AOCbot/data_file.json").then((resp) => {
     get("https://saturn.rochesterschools.org/python/AOCbot/users.json").then((resp2) => {
       var members = Object.values(resp.data.members)
@@ -62,7 +62,7 @@ client.once('ready', () => {
     })
   })
 
-  //},1000)
+  },60000)
 
 
 });
