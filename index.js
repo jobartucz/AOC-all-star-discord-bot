@@ -20,9 +20,10 @@ client.once('ready', () => {
 
   client.user.setActivity(`you solve aoc`, { type: 'WATCHING' });
 
-
   setInterval(() => {
     var d = new Date();
+    d = convertTZ(d, "America/Chicago")
+
     get("https://saturn.rochesterschools.org/python/AOCbot/data_file.json").then((resp) => {
       get("https://saturn.rochesterschools.org/python/AOCbot/users.json").then((resp2) => {
         var members = Object.values(resp.data.members)
@@ -83,7 +84,7 @@ client.once('ready', () => {
 
         })
 
-        if (d.getHours() - 6 == 11 && d.getMinutes == 0) {
+        if (d.getHours() == 23 && d.getMinutes == 0) {
           var channel = client.channels.cache.find(x => x.id.toString() == channels.all)
           channel.send("A new puzzle has come out! Everyone has been removed from this channel.")
         }
