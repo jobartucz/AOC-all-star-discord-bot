@@ -16,6 +16,9 @@ function convertTZ(date, tzString) {
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
+  
+
+
   console.log('Ready!');
 
   client.user.setActivity(`you solve aoc`, { type: 'WATCHING' });
@@ -52,10 +55,10 @@ client.once('ready', () => {
                   SEND_MESSAGES: true,
                   VIEW_CHANNEL: true
                 });
-                allChannel.send(user.name + " has completed all the problems")
+
               }
             } else if (allChannel.permissionOverwrites.cache.find(x => x.id == user.discord.id)) {
-              allChannel.permissionOverwrites.delete(user.discord.id)
+              allChannel.permissionOverwrites.delete(duser)
             }
 
 
@@ -69,7 +72,7 @@ client.once('ready', () => {
                     SEND_MESSAGES: true,
                     VIEW_CHANNEL: true
                   });
-                  channel.send(user.name + " has completed Day " + completed + "!")
+
                 } else {
                   //already is in channel
                 }
@@ -86,7 +89,7 @@ client.once('ready', () => {
 
         if (d.getHours() == 23 && d.getMinutes == 0) {
           var channel = client.channels.cache.find(x => x.id.toString() == channels.all)
-          channel.send("A new puzzle has come out! Everyone has been removed from this channel.")
+
         }
 
 
