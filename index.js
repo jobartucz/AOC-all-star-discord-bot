@@ -218,17 +218,19 @@ client.once('ready', () => {
         //axios fetch https://saturn.rochesterschools.org/python/AOCbot/prizes.csv
         get("https://saturn.rochesterschools.org/python/AOCbot/prizes.csv").then(function(response) {
           var prizes = response.data.split("\r\n")
-    
-         //filter out prizes that have already been won
-           winners = prizes.filter(x => (x.charAt(x.length-1) != "," && x != ",")).splice(1, prizes.length - 1).map((e)=>e.split(",")[1])
-       
+
+    var unclaimed = response.data.split("\n").filter(x =>x.split(",")[0] == "Unclaimed").map((x) => x.split(",")[1]).filter(Boolean)
+          var winners = prizes.filter(x => (x.charAt(x.length-1) != "," && x != ",")).splice(1, prizes.length - 1).map((e)=>e.split(",")[1])
+         winners = winners.concat(unclaimed)
            var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName?e.irlName:e.name).sort((a, b) => a.localeCompare(b))
-        //since i get 2 entries
+        //since me and kenny get 2 entries
         players.push("<@875067761557127178>")
+        players.push("<@112577205984301056>")
+                   var delay = 3600000
         interaction.reply("Thank you for summoning Thanos! Your summoning is very important to us! Unfortunately, all of our Thani are on other summonings right now. One of them will be with you as soon as possible! Your wait time is approximately... 60 minutes...")
-           interaction.channel.send("***Reality can be whatever I want..***\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/n3KTuj4eEjcAAAAd/thanos-infinity-war.gif")
+           interaction.channel.send("***Reality can be whatever I want..***\nNext Snap <t:"+Math.round((+new Date()+delay)/1000)+":R>\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/n3KTuj4eEjcAAAAd/thanos-infinity-war.gif")
          
-           var delay = 3600000
+
 //set text in file thanos.txt
       fs.writeFile("thanos.txt", players.join("\n")+"\n\n"+(Date.now()+delay)+"\n\n"+interaction.channel.id, function(err) {
         if(err) {
@@ -279,10 +281,11 @@ setInterval(() => {
     var channel = client.channels.cache.get(lines[2])
 if(players.length != 1) {
     //send message
-    channel.send("***Thanos has spoken..***\n"+players.join("\n")+"\n\nhttps://c.tenor.com/TG5OF7UkLasAAAAC/thanos-infinity.gif")
+        var delay =3600000
+    channel.send("***Thanos has spoken..***\nNext Snap <t:"+Math.round((+new Date()+delay)/1000)+":R>\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/TG5OF7UkLasAAAAC/thanos-infinity.gif")
 
     //update file
-    var delay =3600000
+
     fs.writeFile("thanos.txt", players.join("\n")+"\n\n"+(Date.now()+delay)+"\n\n"+lines[2], function(err) {
       if(err) {
         return console.log(err);
