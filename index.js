@@ -214,7 +214,7 @@ client.once('ready', () => {
 
 
     if(commandName == "thanos") {
-      if(interaction.member.id != 198994738345410560) {
+      if(interaction.member.id == 198994738345410560) {
         //axios fetch https://saturn.rochesterschools.org/python/AOCbot/prizes.csv
         get("https://saturn.rochesterschools.org/python/AOCbot/prizes.csv").then(function(response) {
           var prizes = response.data.split("\r\n")
