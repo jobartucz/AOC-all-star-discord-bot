@@ -5,11 +5,17 @@ const Discord = require('discord.js');
 var {
   get
 } = require("axios")
-
+var fs = require("fs")
 const client = new Discord.Client({
   intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_PRESENCES", "GUILD_MEMBERS"]
 });
-
+const removeRandom = (array) => {
+  while(array.length){
+     const random = Math.floor(Math.random() * array.length);
+     const el = array.splice(random, 1)[0];
+     return (el);
+  }
+};
 var channels = require("./channels.js")
 
 Object.filter = (obj, predicate) =>
@@ -39,19 +45,31 @@ function refresh() {
         }
       })
       var discords = {};
+      var names = {};
       for (var name in resp2.data) {
         var discord = resp2.data[name]["If you are participating in the RCC Discord server, you will be automatically added to specific channels when you complete stars. You can join here: https://discord.gg/hsN92V4  - Please enter your Discord username so we can verify you."]
+        var irlName = resp2.data[name]["What is your first and last name?"]
+        if(irlName) names[name] = irlName;
         if (discord) discords[name] = discord
       }
       let list = client.users.cache
       usersObj = {}
       allUsersObj = {}
       members.forEach((member) => {
+        var duser = list.find(u => discords[member.name] == u.tag)
+        if(duser) {
+        member.discord =   {
+          id: duser.id,
+          tag: discords[member.name]
+        }
+        }
+        var irlName =  names[member.name]
+        if(irlName) member.irlName = irlName
         allUsersObj[member.id] = member
      
-        var duser = list.find(u => discords[member.name] == u.tag)
+
         if (duser) {
-          
+        
 
           var user = {
             discord: {
@@ -105,7 +123,7 @@ function refresh() {
 
 
         }
-
+    
       })
 
       if (d.getHours() == 23 && d.getMinutes == 0) {
@@ -126,14 +144,11 @@ client.once('ready', () => {
 //console.log(client.guilds.cache)
     commands = guild.commands
 
-  
+  //thanos
+
   commands.create({
-    name: "stats",
-    description: "View your AOC stats!",
-  })
-  commands.create({
-    name: "leaderboard",
-    description: "View the AOC leaderboard!",
+    name: "thanos",
+    description: "Reality can be whatever I want.",
   })
 
   client.user.setActivity(`you solve aoc`, {
@@ -197,6 +212,36 @@ client.once('ready', () => {
       interaction.reply({embeds: [embed], ephemeral: true})
     }
 
+
+    if(commandName == "thanos") {
+      if(interaction.member.id != 198994738345410560) {
+        //axios fetch https://saturn.rochesterschools.org/python/AOCbot/prizes.csv
+        get("https://saturn.rochesterschools.org/python/AOCbot/prizes.csv").then(function(response) {
+          var prizes = response.data.split("\r\n")
+    
+         //filter out prizes that have already been won
+           winners = prizes.filter(x => (x.charAt(x.length-1) != "," && x != ",")).splice(1, prizes.length - 1).map((e)=>e.split(",")[1])
+       
+           var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName?e.irlName:e.name).sort((a, b) => a.localeCompare(b))
+        //since i get 2 entries
+        players.push("<@875067761557127178>")
+           interaction.channel.send("***Reality can be whatever I want..***\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/n3KTuj4eEjcAAAAd/thanos-infinity-war.gif")
+         
+           var delay = 3600000
+//set text in file thanos.txt
+      fs.writeFile("thanos.txt", players.join("\n")+"\n\n"+(Date.now()+delay)+"\n\n"+interaction.channel.id, function(err) {
+        if(err) {
+          return console.log(err);
+        }
+      
+      });
+    })
+      } else {
+        //send gif
+        interaction.reply("https://c.tenor.com/chW7VLw85JYAAAAC/thanos-avengers.gif")
+      }
+    }
+
   })
 
   setInterval(() => {
@@ -205,6 +250,51 @@ client.once('ready', () => {
   }, 30000)
   refresh()
 
+
+  //thanos interval
+var thanosDelay = 1000
+setInterval(() => {
+  //read file thanos.txt
+
+  fs.readFile("thanos.txt", function(err, data) {
+    if(err) return;
+    //read each line
+    var lines = data.toString().split("\n\n")
+    var timeToSnap = parseInt(lines[1])
+    //get diffrence between now and time to snap
+    var diff = Math.abs(timeToSnap - Date.now())
+    
+    //if diff is less than thanosDelay, send message
+    if(diff < thanosDelay/2) {
+     var players = lines[0].split("\n")
+     //randomly remove 1/2 of players
+
+    //run n times
+    for(var i = Math.ceil(players.length/2); i >0; i--) {
+      removeRandom(players)
+    }
+   
+    //get channel from id
+    var channel = client.channels.cache.get(lines[2])
+if(players.length != 1) {
+    //send message
+    channel.send("***Thanos has spoken..***\n"+players.join("\n")+"\n\nhttps://c.tenor.com/TG5OF7UkLasAAAAC/thanos-infinity.gif")
+
+    //update file
+    var delay =3600000
+    fs.writeFile("thanos.txt", players.join("\n")+"\n\n"+(Date.now()+delay)+"\n\n"+lines[2], function(err) {
+      if(err) {
+        return console.log(err);
+      }
+    
+    });
+  } else {
+    channel.send("**THE WINNER IS...**\n"+players[0]+"\n\nhttps://c.tenor.com/0Mg3R5jZUnQAAAAd/thanos-dance.gif")
+  }
+  }
+  })
+
+} , thanosDelay)
 
 });
 
