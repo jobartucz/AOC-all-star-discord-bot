@@ -225,6 +225,7 @@ client.once('ready', () => {
            var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName?e.irlName:e.name).sort((a, b) => a.localeCompare(b))
         //since i get 2 entries
         players.push("<@875067761557127178>")
+        interaction.reply("**Mr. B has summoned Thanos!**")
            interaction.channel.send("***Reality can be whatever I want..***\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/n3KTuj4eEjcAAAAd/thanos-infinity-war.gif")
          
            var delay = 3600000
