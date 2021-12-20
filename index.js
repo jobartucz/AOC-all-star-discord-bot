@@ -225,7 +225,7 @@ client.once('ready', () => {
            var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName?e.irlName:e.name).sort((a, b) => a.localeCompare(b))
         //since i get 2 entries
         players.push("<@875067761557127178>")
-        interaction.reply("**Mr. B has summoned Thanos!**")
+        interaction.reply("Thank you for summoning Thanos! Your summoning is very important to us! Unfortunately, all of our Thani are on other summonings right now. One of them will be with you as soon as possible! Your wait time is approximately... 60 minutes...")
            interaction.channel.send("***Reality can be whatever I want..***\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/n3KTuj4eEjcAAAAd/thanos-infinity-war.gif")
          
            var delay = 3600000
@@ -253,7 +253,7 @@ client.once('ready', () => {
 
 
   //thanos interval
-var thanosDelay = 1000
+var thanosDelay = 500
 setInterval(() => {
   //read file thanos.txt
 
