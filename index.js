@@ -1,6 +1,5 @@
 require('dotenv').config();
 const token = process.env['TOKEN']
-
 const Discord = require('discord.js');
 var {
   get
@@ -16,6 +15,7 @@ const removeRandom = (array) => {
      return (el);
   }
 };
+var lastThanos = 0;
 var channels = require("./channels.js")
 
 Object.filter = (obj, predicate) =>
@@ -150,6 +150,10 @@ client.once('ready', () => {
     name: "thanos",
     description: "Reality can be whatever I want.",
   })
+   commands.create({
+    name: "forcethanos",
+    description: "When thanos stops snapping.",
+  })
 
   client.user.setActivity(`you solve aoc`, {
     type: 'WATCHING'
@@ -219,13 +223,15 @@ client.once('ready', () => {
         get("https://saturn.rochesterschools.org/python/AOCbot/prizes.csv").then(function(response) {
           var prizes = response.data.split("\r\n")
 
-    var unclaimed = response.data.split("\n").filter(x =>x.split(",")[0] == "Unclaimed").map((x) => x.split(",")[1]).filter(Boolean)
-          var winners = prizes.filter(x => (x.charAt(x.length-1) != "," && x != ",")).splice(1, prizes.length - 1).map((e)=>e.split(",")[1])
-         winners = winners.concat(unclaimed)
-           var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName?e.irlName:e.name).sort((a, b) => a.localeCompare(b))
+
+          var winners = prizes.filter(x => (x.charAt(x.length-1) != ",")).splice(1, prizes.length - 1).map((e)=>e.split(",")[1])
+         
+         console.log(winners)
+           var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !winners.includes(x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.irlName??e.name)
+           console.log(players)
         //since me and kenny get 2 entries
-        players.push("<@875067761557127178>")
-        players.push("<@112577205984301056>")
+        players.push("evil <@875067761557127178>")
+        
                    var delay = 3600000
         interaction.reply("Thank you for summoning Thanos! Your summoning is very important to us! Unfortunately, all of our Thani are on other summonings right now. One of them will be with you as soon as possible! Your wait time is approximately... 60 minutes...")
            interaction.channel.send("***Reality can be whatever I want..***\nNext Snap <t:"+Math.round((+new Date()+delay)/1000)+":R>\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/n3KTuj4eEjcAAAAd/thanos-infinity-war.gif")
@@ -238,11 +244,53 @@ client.once('ready', () => {
         }
       
       });
+      
     })
+
+    
       } else {
         //send gif
         interaction.reply("https://c.tenor.com/chW7VLw85JYAAAAC/thanos-avengers.gif")
       }
+    }
+
+    if(commandName == "forcethanos") {
+      if(interaction.member.id != 875067761557127178)  interaction.reply("only gautam can do this")
+ fs.readFile("thanos.txt", function(err, data) {
+       if(err) return;
+    //read each line
+    var lines = data.toString().split("\n\n")
+    
+      lastThanos = Date.now()
+     var players = lines[0].split("\n")
+     //randomly remove 1/2 of players
+
+    //run n times
+    for(var i = Math.ceil(players.length/2); i >0; i--) {
+      removeRandom(players)
+    }
+   
+    //get channel from id
+    var channel = client.channels.cache.get(lines[2])
+if(players.length != 1) {
+    //send message
+        var delay =3600000
+    channel.send("***Thanos has spoken..***\nNext Snap <t:"+Math.round((+new Date()+delay)/1000)+":R>\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/TG5OF7UkLasAAAAC/thanos-infinity.gif")
+
+    //update file
+
+    fs.writeFile("thanos.txt", players.join("\n")+"\n\n"+(Date.now()+delay)+"\n\n"+lines[2], function(err) {
+      if(err) {
+        return console.log(err);
+      }
+    
+    });
+  } else {
+    channel.send("**THE WINNER IS...**\n"+players[0]+"\n\nhttps://c.tenor.com/0Mg3R5jZUnQAAAAd/thanos-dance.gif")
+  }
+ })
+
+    
     }
 
   })
@@ -268,7 +316,8 @@ setInterval(() => {
     var diff = Math.abs(timeToSnap - Date.now())
     
     //if diff is less than thanosDelay, send message
-    if(diff < thanosDelay/2) {
+    if(diff < thanosDelay && Date.now()-lastThanos > 100000) {
+      lastThanos = Date.now()
      var players = lines[0].split("\n")
      //randomly remove 1/2 of players
 
@@ -299,6 +348,8 @@ if(players.length != 1) {
   })
 
 } , thanosDelay)
+
+
 
 });
 
