@@ -218,17 +218,16 @@ client.once('ready', () => {
 
 
     if(commandName == "thanos") {
-      if(interaction.member.id == 198994738345410560) {
+      if(interaction.member.id != 198994738345410560) {
         //axios fetch https://saturn.rochesterschools.org/python/AOCbot/prizes.csv
         get("https://saturn.rochesterschools.org/python/AOCbot/prizes.csv").then(function(response) {
           var prizes = response.data.split("\r\n")
 
-
-          var winners = prizes.filter(x => (x.charAt(x.length-1) != ",")).splice(1, prizes.length - 1).map((e)=>e.split(",")[1])
-         
-         console.log(winners)
-           var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !winners.includes(x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.irlName??e.name)
-           console.log(players)
+          var winners = prizes.map((e)=>e.split(",")[1]).filter(Boolean).splice(1, prizes.length - 1)
+   
+           var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !winners.includes(x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName??e.name)
+          //interesting outlier
+          players = players.filter((e)=>!(e=="Junhao Zhang" || e=="<@456220387148169236>"))
         //since me and kenny get 2 entries
         players.push("evil <@875067761557127178>")
         
