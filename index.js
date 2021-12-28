@@ -218,7 +218,7 @@ client.once('ready', () => {
 
 
     if(commandName == "thanos") {
-      if(interaction.member.id != 198994738345410560) {
+      if(interaction.member.id == 198994738345410560) {
         //axios fetch https://saturn.rochesterschools.org/python/AOCbot/prizes.csv
         get("https://saturn.rochesterschools.org/python/AOCbot/prizes.csv").then(function(response) {
           var prizes = response.data.split("\r\n")
@@ -231,7 +231,7 @@ client.once('ready', () => {
         //since me and kenny get 2 entries
         players.push("evil <@875067761557127178>")
         
-                   var delay = 3600000
+                   var delay = 900000
         interaction.reply("Thank you for summoning Thanos! Your summoning is very important to us! Unfortunately, all of our Thani are on other summonings right now. One of them will be with you as soon as possible! Your wait time is approximately... 60 minutes...")
            interaction.channel.send("***Reality can be whatever I want..***\nNext Snap <t:"+Math.round((+new Date()+delay)/1000)+":R>\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/n3KTuj4eEjcAAAAd/thanos-infinity-war.gif")
          
@@ -297,7 +297,7 @@ if(players.length != 1) {
   setInterval(() => {
  refresh()
 
-  }, 30000)
+  }, 10000)
   refresh()
 
 
@@ -329,7 +329,7 @@ setInterval(() => {
     var channel = client.channels.cache.get(lines[2])
 if(players.length != 1) {
     //send message
-        var delay =3600000
+        var delay =900000
     channel.send("***Thanos has spoken..***\nNext Snap <t:"+Math.round((+new Date()+delay)/1000)+":R>\n\n"+players.join("\n")+"\n\nhttps://c.tenor.com/TG5OF7UkLasAAAAC/thanos-infinity.gif")
 
     //update file
