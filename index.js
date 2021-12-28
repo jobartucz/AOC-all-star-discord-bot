@@ -225,7 +225,7 @@ client.once('ready', () => {
 
           var winners = prizes.map((e)=>e.split(",")[1]).filter(Boolean).splice(1, prizes.length - 1)
    
-           var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !winners.includes(x.name) && !((x.irlName ?? x.name).startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName??e.name)
+           var players = Object.values(allUsersObj).filter((e)=>e.stars>1).filter(x => !winners.includes(x.irlName ?? x.name) && !winners.includes(x.name) && !((x.irlName ?? x.name)?.startsWith("Mr."))).map((e)=>e.discord?`<@${e.discord.id}>`:e.irlName??e.name)
           //interesting outlier
           players = players.filter((e)=>!(e=="Junhao Zhang" || e=="<@456220387148169236>"))
         //since me and kenny get 2 entries
