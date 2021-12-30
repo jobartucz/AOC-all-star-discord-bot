@@ -271,6 +271,7 @@ client.once('ready', () => {
    
     //get channel from id
     var channel = client.channels.cache.get(lines[2])
+    console.log(lines[2])
 if(players.length != 1) {
     //send message
         var delay =3600000
